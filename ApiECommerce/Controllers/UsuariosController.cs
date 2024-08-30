@@ -56,24 +56,24 @@ public class UsuariosController : ControllerBase
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.Email , usuario.Email)
+            new Claim(ClaimTypes.Email , usuario.Email!)
         };
 
         var token = new JwtSecurityToken(
             issuer: _config["JWT:Issuer"],
             audience: _config["JWT:Audience"],
             claims: claims,
-            expires: DateTime.Now.AddDays(30),
+            expires: DateTime.Now.AddDays(60),
             signingCredentials: credentials);
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
         return new ObjectResult(new
         {
-            access_token = jwt,
-            token_type = "bearer",
-            user_id = usuarioAtual.Id,
-            user_name = usuarioAtual.Nome
+            accesstoken = jwt,
+            tokentype = "bearer",
+            usuarioid = usuarioAtual.Id,
+            usuarionome = usuarioAtual.Nome
         });
     }
 
@@ -112,7 +112,7 @@ public class UsuariosController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("imagemperfil")]
+    [HttpGet("[action]")]
     public async Task<IActionResult> ImagemPerfilUsuario()
     {
         //verifica se o usuário esta autenticado
